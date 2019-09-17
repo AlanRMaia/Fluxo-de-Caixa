@@ -18,11 +18,11 @@ namespace Project.Application.Services
 			this.servicosDomain = servicosDomain;
 		}
 
-
 		public void Cadastrar(LancamentoCadastroModel model)
 		{
 			var entity = Mapper.Map<Lancamentos>(model);
 			servicosDomain.Cadastrar(entity);
+
 		}
 
 		public void Atualizar(LancamentoEdicaoModel model)
@@ -39,12 +39,25 @@ namespace Project.Application.Services
 
 		public List<LancamentoConsultaModel> ConsultarTodos()
 		{
-			var entityList = servicosDomain.ConsultarTodos();
-			return Mapper.Map<List<LancamentoConsultaModel>>(entityList);
-			
+			var model = servicosDomain.ConsultarTodos();
+			return Mapper.Map<List<LancamentoConsultaModel>>(model);
 		}
 
-		public LancamentoConsultaModel ConsultaPorId(int id)
+		public List<LancamentoConsultaModel> ConsultarTodosDoDia(DateTime de, DateTime para)
+		{
+			var mes = servicosDomain.ConsultarTodosDoDia(de, para);
+
+			return Mapper.Map<List<LancamentoConsultaModel>>(mes);
+		}
+
+		public List<LancamentoConsultaModel> ConsultarPorData(DateTime model)
+		{
+			var entity = servicosDomain.ConsultarPorData(model);
+
+			return Mapper.Map<List<LancamentoConsultaModel>>(entity);
+		}
+
+		public LancamentoConsultaModel ConsultarPorId(int id)
 		{
 			var entity = servicosDomain.ConsultarPorId(id);
 			return Mapper.Map<LancamentoConsultaModel>(entity);
@@ -53,6 +66,12 @@ namespace Project.Application.Services
 		public void Dispose()
 		{
 			servicosDomain.Dispose();
+		}
+
+		public List<LancamentoConsultaModel> ConsultarLayout(DateTime de, DateTime para)
+		{
+			var entity = servicosDomain.ConsultaLeyout(de, para);
+			return Mapper.Map<List<LancamentoConsultaModel>>(entity);
 		}
 	}
 }

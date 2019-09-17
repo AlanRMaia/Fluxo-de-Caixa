@@ -49,6 +49,11 @@ namespace Project.Domain.Services
 		{
 			return saldo.ConsultaSaldoTotal();
 		}
+
+		public List<Lancamentos> ConsultaLeyout(DateTime de, DateTime para)
+		{
+			return saldo.ConsultaLayout(de, para);
+		}
 	}
 }
 

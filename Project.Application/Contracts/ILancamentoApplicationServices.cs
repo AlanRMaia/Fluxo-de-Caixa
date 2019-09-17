@@ -12,6 +12,11 @@ namespace Project.Application.Contracts
 		void Excluir(int id);
 
 		List<LancamentoConsultaModel> ConsultarTodos();
-		LancamentoConsultaModel ConsultaPorId(int id);
+		List<LancamentoConsultaModel> ConsultarTodosDoDia(DateTime de, DateTime para);
+		List<LancamentoConsultaModel> ConsultarLayout(DateTime de, DateTime para);
+		List<LancamentoConsultaModel> ConsultarPorData(DateTime obj);
+
+
+		LancamentoConsultaModel ConsultarPorId(int id);
 	}
 }

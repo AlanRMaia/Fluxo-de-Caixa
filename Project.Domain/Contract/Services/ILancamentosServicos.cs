@@ -10,6 +10,7 @@ namespace Project.Domain.Contract.Services
 	{
 		decimal ConsultarSaldoDia();
 		decimal ConsultarSaldoTotal();
+		List<Lancamentos> ConsultaLeyout(DateTime de, DateTime para);
 
 	}
 }
