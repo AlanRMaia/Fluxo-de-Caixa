@@ -43,15 +43,20 @@ namespace Project.Infra.Mappings
 				.IsRequired();
 
 			builder.Property(l => l.ValorLancamento)
-				.HasColumnType("18,2")
+				.HasColumnType("decimal(18,2)")
 				.IsRequired();
 
 			builder.Property(l => l.DataLancamento)
-				.HasColumnType("datetime")
+				.HasColumnType("date")
 				.IsRequired();
 
 			builder.Property(l => l.Encargos)
-				.HasColumnType("double");
+				.HasColumnType("decimal(18,2)")
+				.IsRequired();
+
+			builder.Property(l => l.Descricao)
+				.HasMaxLength(150)
+				.IsRequired();
 		}
 	}
 }

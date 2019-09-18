@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Project.Infra.Repositories
 {
-	public class BaseRepository<TEntity> : 
+	public abstract class BaseRepository<TEntity> : 
 		IBaseRepositories<TEntity> where TEntity: class
 	{
 		private readonly DataContext context;

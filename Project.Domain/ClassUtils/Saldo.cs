@@ -1,32 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Project.Domain.Services;
+using Project.Domain.Contract.Repositories;
 using Project.Domain.Entities;
 using System.Timers;
+using Project.Domain.Contract.Class;
 
 namespace Project.Domain.ClassUtils
 {
-	public class Saldo
-	{
-		private readonly LancamentosDomainServices lancamentos;
+	public class Saldo : ISaldoUtils
 
-		public Saldo(LancamentosDomainServices lancamentos)
+	{
+		private readonly  ILancamentosRepositories lancamentos;	
+		
+
+		public Saldo(ILancamentosRepositories lancamentos)
 		{
 			this.lancamentos = lancamentos;
 		}
 
-
 		public Saldo()
 		{
-
 		}
 
 		public decimal ColsultarSaldoDia()
 		{
 			var timer = DateTime.Now.Date;
 
-			var dia = lancamentos.ConsultarPorData(timer);
+			var dia = lancamentos.SelectAllDate(timer);
 			decimal saida = 0;
 			decimal entrada = 0;
 			decimal saldo;
@@ -52,7 +53,7 @@ namespace Project.Domain.ClassUtils
 
 		public decimal ConsultaSaldoTotal()
 		{
-			var todos = lancamentos.ConsultarTodos();
+			var todos = lancamentos.SelectAll();
 
 			decimal saida = 0;
 			decimal entrada = 0;
@@ -82,7 +83,7 @@ namespace Project.Domain.ClassUtils
 		{
 			var timer = DateTime.Today.AddDays(-1);
 
-			var dia = lancamentos.ConsultarPorData(timer);
+			var dia = lancamentos.SelectAllDate(timer);
 			decimal saida = 0;
 			decimal entrada = 0;
 			decimal saldo;
@@ -111,7 +112,7 @@ namespace Project.Domain.ClassUtils
 		public List<Lancamentos> ConsultaLayout(DateTime de, DateTime para)
 		{
 
-			var conjuntos = lancamentos.ConsultarTodosDoDia(de, para);
+			var conjuntos = lancamentos.SelectAll(de, para);
 
 			var list = new List<Lancamentos>();
 			var indice = new Lancamentos();
@@ -130,5 +131,6 @@ namespace Project.Domain.ClassUtils
 			return list;
 		}
 
+		
 	}
 }

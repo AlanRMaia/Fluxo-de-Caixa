@@ -18,16 +18,42 @@ using Project.Application.Services;
 using Project.Domain.Contract.Services;
 using Project.Domain.Services;
 using Project.Domain.Contract.Repositories;
+using Project.Domain.Entities;
 using Project.Infra.Repositories;
+using System.Threading;
+using Project.Domain.ClassUtils;
+using Project.Domain.Contract.Class;
 
 namespace Projetct.Presentation.Api
 {
 	public class Startup
 	{
+		
+
 		public Startup(IConfiguration configuration)
 		{
 			Configuration = configuration;
+
+			#region Rotina de verificação de saldo negativo
+
+			List<ControleEncargos> list;
+			var encargos = new Encargos();
+			do
+			{
+
+				Thread.Sleep(5000);
+				var saldo = new Saldo();
+				if (saldo.ConsultaSaldoTotal() >= 0)
+				{
+					encargos.DeletarEncargo();
+				}
+
+				list = encargos.SelecionaEncargos();
+			} while (list == null); 
+			#endregion
 		}
+
+		
 
 		public IConfiguration Configuration { get; }
 
@@ -53,8 +79,11 @@ namespace Projetct.Presentation.Api
 
 			//camada de dominio
 			services.AddTransient<ILancamentosServicos, LancamentosDomainServices>();
-
 			services.AddTransient<IControleEncargos, ControleEncargosDomainServices>();
+
+			services.AddTransient<ISaldoUtils, Saldo>();
+			services.AddTransient<IEncargosUtils, Encargos>();
+
 
 			//camada de infra estrutura do repositorio
 			services.AddTransient<ILancamentosRepositories, LancamentosRepository>();

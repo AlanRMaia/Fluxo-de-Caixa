@@ -12,8 +12,7 @@ namespace Project.Infra.Mappings
 	{
 		public void Configure(EntityTypeBuilder<ControleEncargos> builder)
 		{
-			builder.HasKey(c => new { c.IdEncargo});
-			
+			builder.HasKey(c => new { c.IdEncargo});			
 
 			builder.Property(c => c.Tipo)
 				.HasMaxLength(150)
@@ -40,11 +39,16 @@ namespace Project.Infra.Mappings
 				.IsRequired();
 
 			builder.Property(c => c.DataLancamento)
-				.HasColumnType("datetime")
+				.HasColumnType("date")
 				.IsRequired();
 
 			builder.Property(c => c.Encargos)
-				.HasColumnType("double");
+				.HasColumnType("decimal(18,2)")
+				.IsRequired();
+
+			builder.Property(c => c.Descricao)
+				.HasMaxLength(150)
+				.IsRequired();
 				
 
 

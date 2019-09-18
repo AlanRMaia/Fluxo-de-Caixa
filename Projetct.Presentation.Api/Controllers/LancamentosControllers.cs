@@ -111,7 +111,7 @@ namespace Projetct.Presentation.Api.Controllers
 			try
 			{
 
-				var result = lancamentoApplication.(DateTime.Now, DateTime.Now.AddMonths(1));
+				var result = lancamentoApplication.ConsultarLayout(DateTime.Now, DateTime.Now.AddMonths(1));
 				return Ok(result);
 			}
 			catch (Exception e)

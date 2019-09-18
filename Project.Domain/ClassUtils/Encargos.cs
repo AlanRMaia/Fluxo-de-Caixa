@@ -5,23 +5,21 @@ using System.Threading;
 using Project.Domain.Services;
 using Project.Domain.Entities;
 using Project.Domain.ClassUtils;
+using Project.Domain.Contract.Class;
 using Project.Domain.Contract.Repositories;
 
 namespace Project.Domain.ClassUtils
 {
-	public class Encargos
+	public class Encargos : IEncargosUtils
 	{
 		//"encargos": "Valor em reais dos encargos do lançamento no formato (R$ 0.000,00)"
-		private readonly BaseDomainServices<ControleEncargos> services;
-		private readonly BaseDomainServices<Lancamentos> lancamentoService;
+		
 		private readonly ILancamentosRepositories repositories;
 		private readonly IControleEncargosRepositories encargosRepositories;
 
-		public Encargos(BaseDomainServices<ControleEncargos> services,
-			BaseDomainServices<Lancamentos> lancamentoService, ILancamentosRepositories repositories, IControleEncargosRepositories encargosRepositories)
+		public Encargos(ILancamentosRepositories repositories, IControleEncargosRepositories encargosRepositories)
 		{
-			this.services = services;
-			this.lancamentoService = lancamentoService;
+			
 			this.repositories = repositories;
 			this.encargosRepositories = encargosRepositories;
 		}
@@ -57,11 +55,12 @@ namespace Project.Domain.ClassUtils
 			encargosRepositories.Insert(encargos);      
 			
 			List<ControleEncargos> list;
-
+			//rotina 24hs para verificar se o o saldo ainda está menor do que 0
 			do
 			{
 				
-				Thread.Sleep(5000);
+				Thread.Sleep(TimeSpan.FromHours(24));
+
 				if (saldo.ConsultaSaldoTotal() >= 0 )
 				{
 					var id = encargosRepositories.SelectOne(1);
@@ -74,6 +73,18 @@ namespace Project.Domain.ClassUtils
 
 
 
+		}
+
+		public void DeletarEncargo()
+		{
+			var id = encargosRepositories.SelectOne(1);
+			encargosRepositories.Delete(id);
+		}
+
+		public List<ControleEncargos> SelecionaEncargos()
+		{
+
+			return encargosRepositories.SelectAll();
 		}
 
 

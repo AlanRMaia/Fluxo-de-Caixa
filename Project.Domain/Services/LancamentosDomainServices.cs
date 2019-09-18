@@ -28,7 +28,7 @@ namespace Project.Domain.Services
 		{
 			if (saldo.ConsultaSaldoTotal() <= - 20000)
 			{
-
+				return;
 			}
 			else if (saldo.ConsultaSaldoTotal() < 0 && saldo.ConsultaSaldoTotal() > -20000)
 			{
