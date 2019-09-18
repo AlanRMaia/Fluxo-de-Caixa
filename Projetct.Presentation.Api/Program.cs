@@ -8,7 +8,6 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Project.Domain.ClassUtils;
 using Project.Domain.Contract.Repositories;
 
 namespace Projetct.Presentation.Api

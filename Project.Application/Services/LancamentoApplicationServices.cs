@@ -70,7 +70,7 @@ namespace Project.Application.Services
 
 		public List<LancamentoConsultaModel> ConsultarLayout(DateTime de, DateTime para)
 		{
-			var entity = servicosDomain.ConsultaLeyout(de, para);
+			var entity = servicosDomain.ConsultaLayout(de, para);
 			return Mapper.Map<List<LancamentoConsultaModel>>(entity);
 		}
 	}

@@ -7,10 +7,18 @@ namespace Project.Domain.Contract.Services
 {
 	public interface ILancamentosServicos :
 		IBaseDomainServices<Lancamentos>
-	{
-		decimal ConsultarSaldoDia();
-		decimal ConsultarSaldoTotal();
-		List<Lancamentos> ConsultaLeyout(DateTime de, DateTime para);
+	{	
+		
+
+		decimal ColsultarSaldoDia();
+
+		decimal ConsultaSaldoTotal();
+
+		decimal ColsultarSaldoDiaAnterior();
+
+		void EncontrarEncargo();
+
+		List<Lancamentos> ConsultaLayout(DateTime de, DateTime para);
 
 	}
 }

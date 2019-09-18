@@ -4,7 +4,6 @@ using System.Text;
 using Project.Domain.Contract.Repositories;
 using Project.Domain.Entities;
 using Project.Domain.Contract.Services;
-using Project.Domain.ClassUtils;
 
 namespace Project.Domain.Services
 {
@@ -13,47 +12,146 @@ namespace Project.Domain.Services
 		BaseDomainServices<Lancamentos>, ILancamentosServicos
 	{
 		private readonly ILancamentosRepositories repositories;
+		private readonly IControleEncargos controleEncargos;
 
-
-		public LancamentosDomainServices(ILancamentosRepositories repositories)
+		public LancamentosDomainServices(ILancamentosRepositories repositories, IControleEncargos controleEncargos)
 			: base(repositories)
 		{
 			this.repositories = repositories;
-
+			this.controleEncargos = controleEncargos;
 		}
 
-		Saldo saldo = new Saldo();
+
 
 		public override void Cadastrar(Lancamentos obj)
 		{
-			if (saldo.ConsultaSaldoTotal() <= - 20000)
+			if (ConsultaSaldoTotal() <= - 20000)
 			{
 				return;
 			}
-			else if (saldo.ConsultaSaldoTotal() < 0 && saldo.ConsultaSaldoTotal() > -20000)
-			{
-				Encargos encargos = new Encargos();
+			else if (ConsultaSaldoTotal() < 0 && ConsultaSaldoTotal() > -20000)
+			{		
 
-				encargos.EncargosDia(obj);
+				controleEncargos.EncargosDia(obj);
 			}
 
 			repositories.Insert(obj);
 		}
 
-		public decimal ConsultarSaldoDia()
+
+
+		public decimal ColsultarSaldoDia()
 		{
-			return saldo.ColsultarSaldoDia();
+			var timer = DateTime.Now.Date;
+
+			var dia = repositories.SelectAllDate(timer);
+			decimal saida = 0;
+			decimal entrada = 0;
+			decimal saldo;
+
+			foreach (var item in dia)
+			{
+
+				if (item.Tipo.Contains("entrada"))
+				{
+					entrada = +item.ValorLancamento;
+				}
+				else
+				{
+					saida = +item.ValorLancamento;
+				}
+
+			}
+
+			saldo = entrada - saida;
+
+			return saldo;
 		}
 
-		public decimal ConsultarSaldoTotal()
+		public decimal ConsultaSaldoTotal()
 		{
-			return saldo.ConsultaSaldoTotal();
+			var todos = repositories.SelectAll();
+
+			decimal saida = 0;
+			decimal entrada = 0;
+			decimal saldo;
+
+			foreach (var item in todos)
+			{
+
+				if (item.Tipo.Contains("entrada"))
+				{
+					entrada = +item.ValorLancamento;
+				}
+				else
+				{
+					saida = +item.ValorLancamento;
+				}
+
+			}
+
+			saldo = entrada - saida;
+
+			return saldo;
+
 		}
 
-		public List<Lancamentos> ConsultaLeyout(DateTime de, DateTime para)
+		public decimal ColsultarSaldoDiaAnterior()
 		{
-			return saldo.ConsultaLayout(de, para);
+			var timer = DateTime.Today.AddDays(-1);
+
+			var dia = repositories.SelectAllDate(timer);
+			decimal saida = 0;
+			decimal entrada = 0;
+			decimal saldo;
+
+			foreach (var item in dia)
+			{
+
+				if (item.Tipo.Contains("entrada"))
+				{
+					entrada = +item.ValorLancamento;
+				}
+				else
+				{
+					saida = +item.ValorLancamento;
+				}
+
+			}
+
+			saldo = entrada - saida;
+
+			return saldo;
 		}
-	}
+
+		public List<Lancamentos> ConsultaLayout(DateTime de, DateTime para)
+		{
+
+			var conjuntos = repositories.SelectAll(de, para);
+
+			var list = new List<Lancamentos>();
+			var indice = new Lancamentos();
+
+
+			foreach (var item in conjuntos)
+			{
+
+				indice.Tipo = item.Tipo;
+				indice.DataLancamento = item.DataLancamento;
+				indice.ValorLancamento = item.ValorLancamento;
+
+				list.Add(indice);
+			}
+
+			return list;
+		}
+		public void EncontrarEncargo()
+		{
+			if (ConsultaSaldoTotal() >= 0)
+			{
+				controleEncargos.DeletarEncargo();
+			}
+		}
+}
 }
 
